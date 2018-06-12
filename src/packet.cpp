@@ -619,7 +619,7 @@ bool AFSK::Packet::parsePacket() {
 }
 #endif
 
-void AFSK::Packet::printPacket(Stream *s) {
+char* AFSK::Packet::printPacket(Stream *s) {
   uint8_t i;
 #ifdef PACKET_PARSER
   if(!parsePacket()) {
@@ -720,6 +720,8 @@ void AFSK::Packet::printPacket(Stream *s) {
     s->write(*(dataPtr+i));
   }
 #endif
+	
+return (char *)iFrameData
 }
 
 // Determine what we want to do on this ADC tick.
