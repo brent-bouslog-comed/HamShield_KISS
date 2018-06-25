@@ -623,40 +623,40 @@ char* AFSK::Packet::printPacket(Stream *s) {
   uint8_t i;
 #ifdef PACKET_PARSER
   if(!parsePacket()) {
-    s->print(F("Packet not valid"));
+    //s->print(F("Packet not valid"));
     return;
   }
   
-  s->print(srcCallsign);
+  //s->print(srcCallsign);
   if(srcSSID > 0) {
-    s->write('-');
-    s->print(srcSSID);
+   // s->write('-');
+    //s->print(srcSSID);
   }
-  s->print(F(" > "));
-  s->print(dstCallsign);
+  //s->print(F(" > "));
+  //s->print(dstCallsign);
   if(dstSSID > 0) {
-    s->write('-');
-    s->print(dstSSID);
+   // s->write('-');
+   // s->print(dstSSID);
   }
-  s->write(' ');
+  //s->write(' ');
   if(digipeater[0][0] != '\0') {
-    s->print(F("via "));
+   // s->print(F("via "));
     for(i = 0; i < 8; i++) {
       if(digipeater[i][0] == '\0')
         break;
-      s->print(digipeater[i]);
+     // s->print(digipeater[i]);
       if(digipeaterSSID[i] != 0) {
-        s->write('-');
-        s->print(digipeaterSSID[i]);
+      //  s->write('-');
+      //  s->print(digipeaterSSID[i]);
       }
       if((digipeaterSSID[i] & _BV(7)) == _BV(7)) {
-        s->write('*'); // Digipeated already
+      //  s->write('*'); // Digipeated already
       }
       // If we might have more, check to add a comma
       if(i < 7 && digipeater[i+1][0] != '\0') {
-        s->write(',');
+      //  s->write(',');
       }
-      s->write(' ');
+    //  s->write(' ');
     }
   }
   
@@ -664,60 +664,60 @@ char* AFSK::Packet::printPacket(Stream *s) {
   if(control & 3 == 1) {
     switch((control>>2)&3) {
       case 0:
-        s->print(F("RR"));
+       // s->print(F("RR"));
         break;
       case 1:
-        s->print(F("RNR"));
+      //  s->print(F("RNR"));
         break;
       case 2:
-        s->print(F("REJ"));
+      //  s->print(F("REJ"));
         break;
       case 3: // Undefined
-        s->print(F("unk"));
+      //  s->print(F("unk"));
         break;
     }
     // Use a + to indicate poll bit
     if(control & _BV(4) == _BV(4)) {
-      s->write('+');
+    //  s->write('+');
     }
   } else if((control & 3) == 3) { // U Frame
-    s->print(F("U("));
-    s->print(control, HEX);
-    s->write(',');
-    s->print(pid, HEX);
-    s->print(F(") "));
+    //s->print(F("U("));
+    //s->print(control, HEX);
+    //s->write(',');
+    //s->print(pid, HEX);
+    //s->print(F(") "));
   } else if((control & 1) == 0) { // I Frame
-    s->print(F("I("));
-    s->print(control, HEX);
-    s->write(',');
-    s->print(pid, HEX);
-    s->print(F(") "));
+    //s->print(F("I("));
+    //s->print(control, HEX);
+    //s->write(',');
+    //s->print(pid, HEX);
+    //s->print(F(") "));
   }
-  s->print(F("len "));
-  s->print(len);
-  s->print(F(": "));
-  s->print((char *)iFrameData);
-  s->println();
+  //s->print(F("len "));
+  //s->print(len);
+  //s->print(F(": "));
+  //s->print((char *)iFrameData);
+  //s->println();
 #else // no packet parser, do a rudimentary print
   // Second 6 bytes are source callsign
   for(i=7; i<13; i++) {
-    s->write(*(dataPtr+i)>>1);
+    //s->write(*(dataPtr+i)>>1);
   }
   // SSID
-  s->write('-');
-  s->print((*(dataPtr+13) >> 1) & 0xF);
-  s->print(F(" -> "));
+  //s->write('-');
+  //s->print((*(dataPtr+13) >> 1) & 0xF);
+  //s->print(F(" -> "));
   // First 6 bytes are destination callsign
   for(i=0; i<6; i++) {
-    s->write(*(dataPtr+i)>>1);
+    //s->write(*(dataPtr+i)>>1);
   }
   // SSID
-  s->write('-');
-  s->print((*(dataPtr+6) >> 1) & 0xF);
+  //s->write('-');
+  //s->print((*(dataPtr+6) >> 1) & 0xF);
   // Control/PID next two bytes
   // Skip those, print payload
   for(i = 15; i<len; i++) {
-    s->write(*(dataPtr+i));
+    //s->write(*(dataPtr+i));
   }
 #endif
 	
